@@ -7,7 +7,7 @@ import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.peripheral.sortingHardware.PIDcontroling;
-import org.firstinspires.ftc.teamcode.peripheral.sortingHardware.fixColorSensors;
+import org.firstinspires.ftc.teamcode.peripheral.sortingColorSensor;
 
 @Config
 public class sortingModule {
@@ -29,7 +29,7 @@ public class sortingModule {
     }
 
     private DcMotor motorSeparator;
-    private AdafruitI2cColorSensor colorIntake;
+    private sortingColorSensor sortingColor;
     private PIDcontroling motorSeparatorControl;
 
     public sortingModule (DcMotor motor, AdafruitI2cColorSensor colorSensor) {
@@ -38,12 +38,10 @@ public class sortingModule {
         this.motorSeparator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorSeparator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        PIDcontroling motorSeparatorControl = new PIDcontroling(motorSeparator);
+        motorSeparatorControl = new PIDcontroling(motorSeparator);
         motorSeparatorControl.setPointDegrees = motorSeparator.getCurrentPosition();
 
-        this.colorIntake = colorSensor;
-        this.colorIntake.initialize();
-        this.colorIntake.setGain(60);
+        sortingColor = new sortingColorSensor(colorSensor);
 
     }
 
@@ -51,14 +49,8 @@ public class sortingModule {
 
         boolean PIDstate = motorSeparatorControl.tick();
 
-        int colorRed = colorIntake.red();
-        int colorGreen = colorIntake.green();
-        int colorBlue = colorIntake.blue();
-
         if( PIDstate ) {
-            if(     3200 <colorRed && colorRed<4600 &&
-                    1100<colorGreen && colorGreen<1900 &&
-                    800<colorBlue && colorBlue<1200) {
+            if(sortingColor.getColor() == sortingColorSensor.Color.RED) {
 
                 motorSeparatorControl.setPointDegrees += 120;
 

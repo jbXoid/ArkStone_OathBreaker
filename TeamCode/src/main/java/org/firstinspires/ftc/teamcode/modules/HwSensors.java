@@ -23,14 +23,8 @@ public class HwSensors
     AdafruitI2cColorSensor exampleSensor1 = fixSensor(
             (AdafruitI2cColorSensor) hardwareMap.get("MY_COLOR-DEVICE_NAME_1")
     );
-    AdafruitI2cColorSensor exampleSensor2 = fixSensor(
-            (AdafruitI2cColorSensor) hardwareMap.get("MY_COLOR-DEVICE_NAME_2")
-    );
 
 
-
-    public Color UpdateSeparatorColors()
-    { return Color.NONE; } //  Implementation goes here
 
     public Color UpdateBaseColors()
     { return Color.NONE; } //  Implementation goes here

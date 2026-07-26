@@ -46,7 +46,7 @@ public class PIDcontroling {
                 this.resP = this.setPointDegrees - encoderVal/2;
                 if (this.resP != 0) {
 
-                    if (abs(PIDoutput) < this.motorMax && abs(PIDoutput) > this.motorMax) {
+                    if (abs(PIDoutput) < this.motorMax && abs(PIDoutput) > this.motorMin) {
                         this.resI = this.resP * dt;
                     }
 
@@ -90,17 +90,19 @@ public class PIDcontroling {
                     this.prevIsZero = false;
                 }
 
-                motor.setPower(this.PIDoutput);
+
 
                 this.prevErr = this.resP;
                 this.prevTime = runtime.milliseconds();
 
             }
 
-            if (runtime.milliseconds() - this.prevZeroCrossingTime >= this.PIDtimeout && this.prevZeroCrossingTime != 0 && this.prevIsZero) {
+            if (runtime.milliseconds() - this.prevZeroCrossingTime >= this.PIDtimeout && this.prevZeroCrossingTime != 0 && this.prevIsZero || abs(this.setPointDegrees-encoderVal/2)<10 && this.PIDoutput == this.motorMin ) {
+                motor.setPower(0);
                 return true;
             }
             else {
+                motor.setPower(this.PIDoutput);
                 return false;
             }
 

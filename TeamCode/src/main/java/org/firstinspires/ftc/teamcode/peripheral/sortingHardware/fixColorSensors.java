@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.peripheral.sortingHardware;
 
 import static com.qualcomm.hardware.ams.AMSColorSensor.AMS_TCS34725_ADDRESS;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDeviceWithParameters;
@@ -9,6 +11,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchDeviceWithParameters;
 import java.lang.reflect.Field;
 
 public class fixColorSensors {
+
     public static AdafruitI2cColorSensor fix(AdafruitI2cColorSensor sensor){
         try {
             AMSColorSensor.class.getDeclaredField("AMS_TCS34725_ID").setAccessible(true);
