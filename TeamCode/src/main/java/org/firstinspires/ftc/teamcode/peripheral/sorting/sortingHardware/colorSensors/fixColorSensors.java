@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode.peripheral.sortingHardware;
+package org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors;
 
 import static com.qualcomm.hardware.ams.AMSColorSensor.AMS_TCS34725_ADDRESS;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.ams.AMSColorSensor;

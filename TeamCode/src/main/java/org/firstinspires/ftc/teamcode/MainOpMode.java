@@ -7,51 +7,70 @@ import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.teamcode.peripheral.sortingHardware.fixColorSensors;
-import org.firstinspires.ftc.teamcode.peripheral.sortingHardware.PIDcontroling;
-import org.firstinspires.ftc.teamcode.peripheral.sortingModule;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.peripheral.brushes.brushesModule;
+import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors.fixColorSensors;
+import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.PIDcontroling;
+import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingModule;
 
 @Autonomous
 @Config
 public class MainOpMode extends LinearOpMode {
 
-    public static int friendlyPucks = 1;
+    private DcMotorEx motorBrushes;
+    private Servo servoL;
+    private Servo servoR;
     private DcMotor motorL;
+    private DcMotor motorR;
     public DcMotor motorSeparator;
-    private AdafruitI2cColorSensor colorIntake;
+
+    private AdafruitI2cColorSensor sortingColor;
+
     private sortingModule sorting;
+    private brushesModule brushes;
 
     @Override
     public void runOpMode() {
 
-        colorIntake = fixColorSensors.fix(
-                (AdafruitI2cColorSensor) hardwareMap.get("colorIntake")
-        );
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        motorBrushes = hardwareMap.get(DcMotorEx.class, "motorBrushes");
+        servoL = hardwareMap.get(Servo.class,"brushesServoL");
+        servoR = hardwareMap.get(Servo.class,"brushesServoR");
 
         motorL = hardwareMap.get(DcMotor.class,"motorL");
         motorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
+        motorR = hardwareMap.get(DcMotor.class,"motorR");
+        motorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         motorSeparator = hardwareMap.get(DcMotor.class,"motorSeparator");
         motorSeparator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorSeparator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        sorting = new sortingModule(motorSeparator,colorIntake);
+
+        sortingColor = fixColorSensors.fix(
+                (AdafruitI2cColorSensor) hardwareMap.get("sortingColor")
+        );
 
 
-        PIDcontroling motorSeparatorControl = new PIDcontroling(motorSeparator);
-        motorSeparatorControl.setPointDegrees = motorSeparator.getCurrentPosition();
+        brushes = new brushesModule(motorBrushes,servoL,servoR);
+        sorting = new sortingModule(motorSeparator,sortingColor);
+
 
         waitForStart();
 
+        brushes.startBrushes();
 
         while(opModeIsActive()) {
 
             sorting.tick();
+
+            brushes.tick();
 
             telemetry.update();
 

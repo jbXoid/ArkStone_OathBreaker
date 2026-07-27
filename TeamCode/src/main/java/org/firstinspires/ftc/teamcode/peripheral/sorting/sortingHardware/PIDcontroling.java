@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.peripheral.sortingHardware;
+package org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware;
 
 import static java.lang.Math.abs;
 

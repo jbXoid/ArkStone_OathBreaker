@@ -1,10 +1,6 @@
-package org.firstinspires.ftc.teamcode.peripheral;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+package org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors;
 
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
-
-import org.firstinspires.ftc.teamcode.peripheral.sortingHardware.fixColorSensors;
 
 public class sortingColorSensor extends fixColorSensors {
 
@@ -37,6 +33,13 @@ public class sortingColorSensor extends fixColorSensors {
                 800<colorBlue && colorBlue<1200) {
 
             return Color.RED;
+
+        }
+        else if (   400<colorRed && colorRed<1000 &&
+                    1000<colorGreen && colorGreen<1400 &&
+                    1500<colorBlue && colorBlue<2200) {
+
+            return Color.BLUE;
 
         }
         else {

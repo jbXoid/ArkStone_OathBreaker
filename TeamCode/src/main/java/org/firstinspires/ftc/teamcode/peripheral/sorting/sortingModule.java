@@ -1,32 +1,14 @@
-package org.firstinspires.ftc.teamcode.peripheral;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+package org.firstinspires.ftc.teamcode.peripheral.sorting;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.peripheral.sortingHardware.PIDcontroling;
-import org.firstinspires.ftc.teamcode.peripheral.sortingColorSensor;
+import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.PIDcontroling;
+import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors.sortingColorSensor;
 
 @Config
 public class sortingModule {
-
-    public class puckColors {
-        public class redPuck {
-
-            public int redLowerThreshold = 3200;
-            public int redUpperThreshold = 4600;
-            public int greenLowerThreshold = 1100;
-            public int greenUpperThreshold = 1900;
-            public int blueLowerThreshold = 800;
-            public int blueUpperThreshold = 1200;
-
-        }
-        class bluePuck {
-
-        }
-    }
 
     private DcMotor motorSeparator;
     private sortingColorSensor sortingColor;
@@ -53,6 +35,12 @@ public class sortingModule {
             if(sortingColor.getColor() == sortingColorSensor.Color.RED) {
 
                 motorSeparatorControl.setPointDegrees += 120;
+
+            }
+
+            else if(sortingColor.getColor() == sortingColorSensor.Color.BLUE) {
+
+                motorSeparatorControl.setPointDegrees -= 120;
 
             }
         }
