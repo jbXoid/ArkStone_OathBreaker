@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors;
+package org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors;
 
 import static com.qualcomm.hardware.ams.AMSColorSensor.AMS_TCS34725_ADDRESS;
 

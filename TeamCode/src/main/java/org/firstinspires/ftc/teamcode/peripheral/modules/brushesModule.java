@@ -1,4 +1,5 @@
-package org.firstinspires.ftc.teamcode.peripheral.brushes;
+
+package org.firstinspires.ftc.teamcode.peripheral.modules;
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,8 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -60,7 +59,7 @@ public class brushesModule {
 
         this.servoL.setPosition(-0.5);
         this.servoR.setPosition(-0.5);
-        this.motorBrushes.setPower(-0.5);
+        this.motorBrushes.setPower(-0.3);
 
     }
 
@@ -94,7 +93,7 @@ public class brushesModule {
                 if(elapsedTime.milliseconds() - reverseTimeOut >= blockReverseTime && motorBrushes.getCurrent(CurrentUnit.AMPS) < this.blockCurrentThreshold ) {
 
                     isBlocked = false;
-                    this.reverseTimeOut = elapsedTime.milliseconds();
+                    isLargerThenCurrentThresh = false;
                     this.startTimeOut = elapsedTime.milliseconds();
 
                 }
@@ -105,13 +104,14 @@ public class brushesModule {
 
                 if (elapsedTime.milliseconds() - startTimeOut >= startTime) {
 
-                    if( motorBrushes.getCurrent(CurrentUnit.AMPS) > this.blockCurrentThreshold ) {
+                    if( motorBrushes.getCurrent(CurrentUnit.AMPS) > blockCurrentThreshold ) {
 
                         if( isLargerThenCurrentThresh ) {
 
-                            if( elapsedTime.milliseconds() - blockTimeOut >= blockCurrentThreshold ) {
+                            if( elapsedTime.milliseconds() - blockTimeOut >= blockTimeThreshold ) {
 
                                 isBlocked = true;
+                                reverseTimeOut = elapsedTime.milliseconds();
 
                             }
 
@@ -122,6 +122,11 @@ public class brushesModule {
                             blockTimeOut = elapsedTime.milliseconds();
 
                         }
+
+                    }
+                    else {
+
+                        isLargerThenCurrentThresh = false;
 
                     }
 

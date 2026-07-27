@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware;
+package org.firstinspires.ftc.teamcode.peripheral.hardware.motors;
 
 import static java.lang.Math.abs;
 
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-public class PIDcontroling {
+public class PIDangleControling {
 
         public static double kP = 0.025;
         public static double kI = 0;
@@ -21,7 +21,7 @@ public class PIDcontroling {
 
         DcMotor motor;
         ElapsedTime runtime = new ElapsedTime();
-        public PIDcontroling(DcMotor motor) {
+        public PIDangleControling(DcMotor motor) {
             this.motor = motor;
             runtime.reset();
         }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors;
+package org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors;
 
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 

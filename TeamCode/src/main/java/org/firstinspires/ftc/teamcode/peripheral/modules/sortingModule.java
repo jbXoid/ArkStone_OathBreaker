@@ -1,18 +1,18 @@
-package org.firstinspires.ftc.teamcode.peripheral.sorting;
+package org.firstinspires.ftc.teamcode.peripheral.modules;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.PIDcontroling;
-import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors.sortingColorSensor;
+import org.firstinspires.ftc.teamcode.peripheral.hardware.motors.PIDangleControling;
+import org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors.sortingColorSensor;
 
 @Config
 public class sortingModule {
 
     private DcMotor motorSeparator;
     private sortingColorSensor sortingColor;
-    private PIDcontroling motorSeparatorControl;
+    private PIDangleControling motorSeparatorControl;
 
     public sortingModule (DcMotor motor, AdafruitI2cColorSensor colorSensor) {
 
@@ -20,7 +20,7 @@ public class sortingModule {
         this.motorSeparator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorSeparator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        motorSeparatorControl = new PIDcontroling(motorSeparator);
+        motorSeparatorControl = new PIDangleControling(motorSeparator);
         motorSeparatorControl.setPointDegrees = motorSeparator.getCurrentPosition();
 
         sortingColor = new sortingColorSensor(colorSensor);

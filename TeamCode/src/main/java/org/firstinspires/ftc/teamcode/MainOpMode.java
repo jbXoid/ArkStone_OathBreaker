@@ -10,10 +10,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.peripheral.brushes.brushesModule;
-import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors.fixColorSensors;
-import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.PIDcontroling;
-import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingModule;
+import org.firstinspires.ftc.teamcode.peripheral.modules.brushesModule;
+import org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors.fixColorSensors;
+import org.firstinspires.ftc.teamcode.peripheral.modules.sortingModule;
 
 @Autonomous
 @Config
@@ -36,21 +35,21 @@ public class MainOpMode extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
+
+
         motorBrushes = hardwareMap.get(DcMotorEx.class, "motorBrushes");
         servoL = hardwareMap.get(Servo.class,"brushesServoL");
         servoR = hardwareMap.get(Servo.class,"brushesServoR");
 
-        motorL = hardwareMap.get(DcMotor.class,"motorL");
-        motorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        brushes = new brushesModule(motorBrushes,servoL,servoR);
 
+
+        motorL = hardwareMap.get(DcMotor.class,"motorL");
         motorR = hardwareMap.get(DcMotor.class,"motorR");
-        motorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
         motorSeparator = hardwareMap.get(DcMotor.class,"motorSeparator");
-        motorSeparator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorSeparator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         sortingColor = fixColorSensors.fix(
@@ -58,7 +57,6 @@ public class MainOpMode extends LinearOpMode {
         );
 
 
-        brushes = new brushesModule(motorBrushes,servoL,servoR);
         sorting = new sortingModule(motorSeparator,sortingColor);
 
 
