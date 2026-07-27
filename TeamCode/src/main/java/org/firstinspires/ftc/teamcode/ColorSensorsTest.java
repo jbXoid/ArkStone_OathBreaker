@@ -6,8 +6,7 @@ import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorColor;
-import org.firstinspires.ftc.teamcode.peripheral.sorting.sortingHardware.colorSensors.fixColorSensors;
+import org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors.fixColorSensors;
 
 @TeleOp
 public class ColorSensorsTest extends LinearOpMode {
