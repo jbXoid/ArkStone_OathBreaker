@@ -1,15 +1,9 @@
 package org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors;
 
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
+import org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors.Color;
 
 public class sortingColorSensor extends fixColorSensors {
-
-    public enum Color
-    {
-        RED,
-        BLUE,
-        NONE
-    }
 
     private AdafruitI2cColorSensor colorSorting;
 
@@ -17,8 +11,8 @@ public class sortingColorSensor extends fixColorSensors {
 
         this.colorSorting = colorSensor;
 
-        colorSorting.initialize();
-        colorSorting.setGain(40);
+        this.colorSorting.initialize();
+        this.colorSorting.setGain(40);
 
     }
 
@@ -28,16 +22,16 @@ public class sortingColorSensor extends fixColorSensors {
         int colorGreen = colorSorting.green();
         int colorBlue = colorSorting.blue();
 
-        if(     3200<colorRed && colorRed<4600 &&
-                1100<colorGreen && colorGreen<1900 &&
-                800<colorBlue && colorBlue<1200) {
+        if(     3200<colorRed && colorRed<7400 &&
+                1100<colorGreen && colorGreen<2600 &&
+                800<colorBlue && colorBlue<1800) {
 
             return Color.RED;
 
         }
-        else if (   400<colorRed && colorRed<1000 &&
-                    1000<colorGreen && colorGreen<1400 &&
-                    1500<colorBlue && colorBlue<2200) {
+        else if (   400<colorRed && colorRed<2300 &&
+                    1000<colorGreen && colorGreen<3200 &&
+                    1500<colorBlue && colorBlue<4800) {
 
             return Color.BLUE;
 

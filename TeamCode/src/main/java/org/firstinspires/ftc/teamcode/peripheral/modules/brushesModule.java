@@ -51,15 +51,15 @@ public class brushesModule {
 
         this.servoL.setPosition(1);
         this.servoR.setPosition(1);
-        this.motorBrushes.setPower(1);
+        this.motorBrushes.setPower(0.5);
 
     }
 
     private void brushesOut() {
 
-        this.servoL.setPosition(-0.5);
-        this.servoR.setPosition(-0.5);
-        this.motorBrushes.setPower(-0.3);
+        this.servoL.setPosition(-1);
+        this.servoR.setPosition(-1);
+        this.motorBrushes.setPower(-0.5);
 
     }
 
