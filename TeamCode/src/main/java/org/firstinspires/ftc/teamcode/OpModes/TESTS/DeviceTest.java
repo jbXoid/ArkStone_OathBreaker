@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes.TESTS;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.teamcode.DeviceTest.DeviceType.ANALOG_INPUT;
-import static org.firstinspires.ftc.teamcode.DeviceTest.DeviceType.BATTERY_VOLTAGE;
-import static org.firstinspires.ftc.teamcode.DeviceTest.DeviceType.DISTANCE_SENSOR;
-import static org.firstinspires.ftc.teamcode.DeviceTest.DeviceType.NONE;
-import static org.firstinspires.ftc.teamcode.DeviceTest.DeviceType.SERVO;
+import static org.firstinspires.ftc.teamcode.OpModes.TESTS.DeviceTest.DeviceType.ANALOG_INPUT;
+import static org.firstinspires.ftc.teamcode.OpModes.TESTS.DeviceTest.DeviceType.BATTERY_VOLTAGE;
+import static org.firstinspires.ftc.teamcode.OpModes.TESTS.DeviceTest.DeviceType.DISTANCE_SENSOR;
+import static org.firstinspires.ftc.teamcode.OpModes.TESTS.DeviceTest.DeviceType.NONE;
+import static org.firstinspires.ftc.teamcode.OpModes.TESTS.DeviceTest.DeviceType.SERVO;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;

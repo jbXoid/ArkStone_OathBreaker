@@ -25,7 +25,7 @@ public class brushesModule {
     private final double blockTimeThreshold = 750;
 
 
-    private boolean isBlocked = false;
+    public boolean isBlocked = false;
     private boolean isLargerThenCurrentThresh = false;
     private double blockTimeOut = 0;
     private double reverseTimeOut = 0;
@@ -66,8 +66,8 @@ public class brushesModule {
 
     private void brushesStop() {
 
-        this.servoL.setPosition(0);
-        this.servoR.setPosition(0);
+        this.servoL.setPosition(0.5);
+        this.servoR.setPosition(0.5);
         this.motorBrushes.setPower(0);
 
     }

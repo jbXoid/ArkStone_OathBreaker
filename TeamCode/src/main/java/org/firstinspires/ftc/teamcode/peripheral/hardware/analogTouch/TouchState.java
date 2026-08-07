@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.peripheral.hardware.analogTouch;
 
-public enum AnalogTouchState {
+public enum TouchState {
     RELEASED,
     PRESSED
 }

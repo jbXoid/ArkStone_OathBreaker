@@ -14,18 +14,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @Config
 public class PIDwheelbase {
 
-    public static double kP = 0.025;
-    public static double kI = 0.00005;
-    public static double kD = 0.75;
+    public static double kP = 0.02;
+    public static double kI = 0.0;
+    public static double kD = 1.25;
     public static double PIDdelay = 5;
-    public static double motorMin = 0.1;
-    public static double motorMax = 0.5;
+    public static double motorMin = 0.15;
+    public static double motorMax = 1;
     public static double PIDtimeout = 50;
 
     public double setPointDegrees = 0;
 
     public final IMU imu;
-    public double speed = 0.5;
+    public double speed = 1;
     ElapsedTime runtime = new ElapsedTime();
 
     public PIDwheelbase(IMU imu) {
@@ -40,9 +40,8 @@ public class PIDwheelbase {
                         )
                 )
         );
-
-
         imu.resetYaw();
+
 
         if (speed < motorMax) motorMax = speed;
 
@@ -50,34 +49,47 @@ public class PIDwheelbase {
 
     }
 
-    double prevTime = 0;
-    double resP = 0;
-    double resI = 0;
-    double resD = 0;
-    double prevErr = 0;
-    double PIDoutput = 0;
+    private double prevTime = 0;
+    private double resP = 0;
+    private double resI = 0;
+    private double resD = 0;
+    private double prevErr = 0;
+    public double PIDoutput = 0;
     boolean prevIsZero = false;
-    double prevZeroCrossingTime = 0;
+    public double prevZeroCrossingTime = 0;
 
-    public void addAngle(int deg) {
+    public void addAngle(double deg) {
 
         setPointDegrees += deg;
 
     }
 
-    public void setAngle(int deg) {
+    public double getYaw() {
 
-        setPointDegrees = realYaw - deg;
+        double realYaw = absoluteYaw;
+        if(realYaw>0) {
+            while (realYaw>360) realYaw -= 360;
+        }
+        else if(realYaw<0) {
+            while (realYaw<360) realYaw += 360;
+        }
+
+        return realYaw;
+    }
+
+
+    public void setAngle(double deg) {
+
+        setPointDegrees = getYaw() - deg;
 
     }
 
     public double yaw = 0;
-
-    public double realYaw = 0;
+    public double absoluteYaw = 0;
     public double offsetYaw = 0;
     public double prevYaw = 0;
 
-    public double tick() {
+    public boolean tick() {
 
         double dt = runtime.milliseconds() - this.prevTime;
 
@@ -91,15 +103,15 @@ public class PIDwheelbase {
         prevYaw = yaw;
 
 
-        realYaw = yaw + offsetYaw;
+        absoluteYaw = yaw + offsetYaw;
 
 
         if (dt >= PIDdelay) {
 
-            this.resP = this.setPointDegrees - realYaw;
+            this.resP = this.setPointDegrees - absoluteYaw;
             if (this.resP != 0) {
 
-                if (abs(PIDoutput) < motorMax && abs(PIDoutput) > motorMin) {
+                if ( abs(PIDoutput) < motorMax*0.8 ) {
                     this.resI = this.resP * dt;
                 }
 
@@ -128,7 +140,7 @@ public class PIDwheelbase {
             }
 
 
-            if (this.PIDoutput == motorMin) {
+            if (abs(this.PIDoutput) == motorMin) {
 
                 if (!this.prevIsZero) {
                     this.prevZeroCrossingTime = runtime.milliseconds();
@@ -145,13 +157,15 @@ public class PIDwheelbase {
 
         }
 
-        if (runtime.milliseconds() - this.prevZeroCrossingTime >= PIDtimeout && this.prevZeroCrossingTime != 0 && abs(setPointDegrees - realYaw) < 1) {
+        if (runtime.milliseconds() - this.prevZeroCrossingTime >= PIDtimeout && prevIsZero && abs(setPointDegrees - absoluteYaw) < 2) {
 
-            return 0;
+            PIDoutput = 0;
+            return true;
+
 
         } else {
 
-            return this.PIDoutput;
+            return false;
         }
 
     }

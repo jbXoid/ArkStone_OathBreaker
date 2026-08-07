@@ -1,25 +1,33 @@
 package org.firstinspires.ftc.teamcode.peripheral.modules;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.peripheral.hardware.analogTouch.Bumper;
+import org.firstinspires.ftc.teamcode.peripheral.hardware.analogTouch.TouchState;
 import org.firstinspires.ftc.teamcode.peripheral.hardware.moving.PIDwheelbase;
 
 import org.firstinspires.ftc.teamcode.peripheral.hardware.moving.Action;
+
+import java.nio.channels.Pipe;
 
 public class movingModule {
 
     private DcMotorEx motorL;
     private DcMotorEx motorR;
-    public PIDwheelbase PIDcontrol;
     private IMU imu;
+    private AnalogInput touch1;
+    private AnalogInput touch2;
+    private Bumper bumper;
+    public PIDwheelbase PIDcontrol;
     private ElapsedTime elapsedTime;
     private double speed = 0.5;
 
-    public movingModule(DcMotorEx motorL, DcMotorEx motorR, IMU imu) {
+    public movingModule(DcMotorEx motorL, DcMotorEx motorR, IMU imu, Bumper bumper) {
 
         this.motorL = motorL;
         this.motorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -31,14 +39,16 @@ public class movingModule {
         this.motorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.motorR.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.motorL.setMotorEnable();
-        this.motorR.setMotorEnable();
+        this.bumper = bumper;
 
         this.imu = imu;
 
         this.PIDcontrol = new PIDwheelbase(this.imu);
 
         elapsedTime = new ElapsedTime();
+
+        this.motorL.setMotorEnable();
+        this.motorR.setMotorEnable();
 
     }
 
@@ -52,14 +62,14 @@ public class movingModule {
 
     }
 
-    public void addYawAngle(int angle) {
+    public void addYawAngle(double angle) {
 
         realTimeAction = Action.ROTATING;
         PIDcontrol.addAngle(angle);
 
     }
 
-    public void setYawAngle(int angle) {
+    public void setYawAngle(double angle) {
 
         realTimeAction = Action.ROTATING;
         PIDcontrol.setAngle(angle);
@@ -69,20 +79,47 @@ public class movingModule {
     private double forwardTimeOut = 0;
     private double forwardSleep = 0;
 
-    public void forwardByTimer(double ms) {
+    public void forwardToTimeout(double ms) {
 
         if (realTimeAction == Action.NONE) {
 
             forwardSleep = ms;
 
             forwardTimeOut = elapsedTime.milliseconds();
-            realTimeAction = Action.FORWARD_BY_TIMER;
+            realTimeAction = Action.FORWARD_TO_TIMEOUT;
 
         }
 
     }
 
-    private void forwardTick() {
+    public void backwardToTimeout(double ms) {
+
+        if (realTimeAction == Action.NONE) {
+
+            forwardSleep = ms;
+
+            forwardTimeOut = elapsedTime.milliseconds();
+            realTimeAction = Action.BACKWARD_TO_TIMEOUT;
+
+        }
+
+    }
+
+    public void forwardToTouchOrTimeout(double ms) {
+
+        if (realTimeAction == Action.NONE) {
+
+            forwardSleep = ms;
+
+            forwardTimeOut = elapsedTime.milliseconds();
+            realTimeAction = Action.FORWARD_TO_TOUCH_OR_TIMEOUT;
+
+        }
+
+    }
+
+
+    private void forwardTick(double speed) {
 
         PIDcontrol.tick();
 
@@ -97,8 +134,8 @@ public class movingModule {
             this.motorR.setPower(speed);
 
         } else {
-            this.motorL.setPower(0);
-            this.motorR.setPower(0);
+            this.motorL.setPower(speed);
+            this.motorR.setPower(speed);
         }
 
     }
@@ -112,7 +149,15 @@ public class movingModule {
 
     public double getYaw() {
 
-        return PIDcontrol.realYaw;
+        double realYaw = PIDcontrol.absoluteYaw;
+        if(realYaw>0) {
+            while (realYaw>360) realYaw -= 360;
+        }
+        else if(realYaw<0) {
+            while (realYaw<360) realYaw += 360;
+        }
+
+        return realYaw;
 
     }
 
@@ -121,36 +166,48 @@ public class movingModule {
 
     public boolean tick() {
 
-        if (realTimeAction != Action.NONE) PIDoutput = PIDcontrol.tick();
-
+        inPos = PIDcontrol.tick();
+        PIDoutput = PIDcontrol.PIDoutput;
 
         if (realTimeAction == Action.ROTATING) {
 
             motorL.setPower(PIDoutput);
             motorR.setPower(-PIDoutput);
 
-            if (PIDoutput == 0) {
-
-                inPos = true;
+            if (inPos) {
                 realTimeAction = Action.NONE;
+            }
 
-            } else inPos = false;
-
-            return inPos;
-
-        } else if (realTimeAction == Action.FORWARD_BY_TIMER) {
+        } else if (realTimeAction == Action.FORWARD_TO_TIMEOUT) {
 
             if (elapsedTime.milliseconds() - forwardTimeOut >= forwardSleep) {
-                motorL.setPower(0);
-                motorR.setPower(0);
+                stop();
                 realTimeAction = Action.NONE;
-            } else forwardTick();
+            } else forwardTick(speed);
+
+        } else if (realTimeAction == Action.FORWARD_TO_TOUCH_OR_TIMEOUT) {
+
+            if ((elapsedTime.milliseconds() - forwardTimeOut >= forwardSleep) ||
+                    (bumper.getState() == TouchState.PRESSED)) {
+                stop();
+                realTimeAction = Action.NONE;
+            } else forwardTick(speed);
+
+        } else if (realTimeAction == Action.BACKWARD_TO_TIMEOUT) {
+
+            if (elapsedTime.milliseconds() - forwardTimeOut >= forwardSleep) {
+                stop();
+                realTimeAction = Action.NONE;
+            } else forwardTick(-speed);
+
+        } else {
+            stop();
 
         }
 
-        return false;
+        if(realTimeAction == Action.NONE) inPos = true;
+        else inPos = false;
 
+        return inPos;
     }
-
-
 }

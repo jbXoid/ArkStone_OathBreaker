@@ -15,9 +15,9 @@ public class sortingModule {
 
     private DcMotor motorSeparator;
     private Servo gateServo;
-    private sortingColorSensor sortingColor;
-    private fieldColorSensor fieldColor;
-    private PIDangleControling motorSeparatorControl;
+    public sortingColorSensor sortingColor;
+    public fieldColorSensor fieldColor;
+    public PIDangleControling motorSeparatorControl;
 
     public sortingModule (DcMotor motor, AdafruitI2cColorSensor sortingColorSensor, AdafruitI2cColorSensor fieldColorSensor, Servo gateServo) {
 
@@ -78,10 +78,10 @@ public class sortingModule {
         }
 
         if(fieldColor.getColor() == this.teamColor) {
-            gateServo.setPosition(0.65);
+            gateServo.setPosition(0.58);
         }
         else {
-            gateServo.setPosition(0.56);
+            gateServo.setPosition(0.567);
         }
 
     }
