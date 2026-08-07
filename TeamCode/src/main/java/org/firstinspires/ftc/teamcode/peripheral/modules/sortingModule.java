@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.peripheral.modules;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.peripheral.hardware.motors.PIDangleControling;
 import org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors.sortingColorSensor;
@@ -13,11 +14,12 @@ import org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors.Color;
 public class sortingModule {
 
     private DcMotor motorSeparator;
+    private Servo gateServo;
     private sortingColorSensor sortingColor;
     private fieldColorSensor fieldColor;
     private PIDangleControling motorSeparatorControl;
 
-    public sortingModule (DcMotor motor, AdafruitI2cColorSensor sortingColorSensor, AdafruitI2cColorSensor fieldColorSensor) {
+    public sortingModule (DcMotor motor, AdafruitI2cColorSensor sortingColorSensor, AdafruitI2cColorSensor fieldColorSensor, Servo gateServo) {
 
         this.motorSeparator = motor;
         this.motorSeparator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -29,9 +31,12 @@ public class sortingModule {
         sortingColor = new sortingColorSensor(sortingColorSensor);
         fieldColor = new fieldColorSensor(fieldColorSensor);
 
+        this.gateServo = gateServo;
+        this.gateServo.setPosition(0.55);
+
     }
 
-    private Color teamColor;
+    public Color teamColor;
 
     public boolean getTeamColor() {
 
@@ -57,17 +62,26 @@ public class sortingModule {
         boolean PIDstate = motorSeparatorControl.tick();
 
         if( PIDstate ) {
-            if(sortingColor.getColor() == this.teamColor) {
+            Color realtimeColor = sortingColor.getColor();
+
+            if(realtimeColor == this.teamColor) {
 
                 motorSeparatorControl.setPointDegrees -= 120;
 
             }
 
-            else if(sortingColor.getColor() == this.teamColor) {
+            else if(realtimeColor != Color.NONE) {
 
                 motorSeparatorControl.setPointDegrees += 120;
 
             }
+        }
+
+        if(fieldColor.getColor() == this.teamColor) {
+            gateServo.setPosition(0.65);
+        }
+        else {
+            gateServo.setPosition(0.56);
         }
 
     }

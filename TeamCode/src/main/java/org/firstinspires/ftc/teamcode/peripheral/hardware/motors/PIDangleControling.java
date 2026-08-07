@@ -22,8 +22,10 @@ public class PIDangleControling {
         DcMotor motor;
         ElapsedTime runtime = new ElapsedTime();
         public PIDangleControling(DcMotor motor) {
+
             this.motor = motor;
             runtime.reset();
+
         }
 
         double prevTime = 0;
@@ -79,7 +81,7 @@ public class PIDangleControling {
 
 
 
-                if (this.PIDoutput == 0) {
+                if (this.PIDoutput == motorMin) {
 
                     if (!this.prevIsZero) {
                         this.prevZeroCrossingTime = runtime.milliseconds();

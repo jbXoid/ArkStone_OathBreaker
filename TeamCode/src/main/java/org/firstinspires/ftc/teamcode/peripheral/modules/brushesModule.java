@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.peripheral.modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -18,7 +19,7 @@ public class brushesModule {
     private DcMotorEx motorBrushes;
     private ElapsedTime elapsedTime;
 
-    private final double blockReverseTime = 1000;
+    private final double blockReverseTime = 500;
     private final double startTime = 250;
     private final double blockCurrentThreshold = 1.5;
     private final double blockTimeThreshold = 750;
@@ -36,7 +37,7 @@ public class brushesModule {
         this.motorBrushes = motorBrushes;
         this.motorBrushes.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.motorBrushes.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        this.motorBrushes.setDirection(DcMotor.Direction.REVERSE);
+        this.motorBrushes.setDirection(DcMotor.Direction.FORWARD);
 
         this.servoL = servoL;
         this.servoL.setDirection(Servo.Direction.REVERSE);
@@ -51,14 +52,14 @@ public class brushesModule {
 
         this.servoL.setPosition(1);
         this.servoR.setPosition(1);
-        this.motorBrushes.setPower(0.5);
+        this.motorBrushes.setPower(1);
 
     }
 
     private void brushesOut() {
 
-        this.servoL.setPosition(-1);
-        this.servoR.setPosition(-1);
+        this.servoL.setPosition(0);
+        this.servoR.setPosition(0);
         this.motorBrushes.setPower(-0.5);
 
     }

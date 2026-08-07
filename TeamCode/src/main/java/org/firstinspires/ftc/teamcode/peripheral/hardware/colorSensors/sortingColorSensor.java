@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors;
 
+import static java.lang.Double.max;
+
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import org.firstinspires.ftc.teamcode.peripheral.hardware.colorSensors.Color;
 
@@ -22,16 +24,12 @@ public class sortingColorSensor extends fixColorSensors {
         int colorGreen = colorSorting.green();
         int colorBlue = colorSorting.blue();
 
-        if(     3200<colorRed && colorRed<7400 &&
-                1100<colorGreen && colorGreen<2600 &&
-                800<colorBlue && colorBlue<1800) {
+        if(colorRed - max(colorBlue, colorGreen) > 1000) {
 
             return Color.RED;
 
         }
-        else if (   400<colorRed && colorRed<2300 &&
-                    1000<colorGreen && colorGreen<3200 &&
-                    1500<colorBlue && colorBlue<4800) {
+        else if (colorBlue - max(colorRed, colorGreen) > 700) {
 
             return Color.BLUE;
 
